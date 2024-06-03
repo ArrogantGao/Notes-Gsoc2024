@@ -47,6 +47,35 @@ These rules lead to the four possible transforms of the contraction tree as show
 
 The TreeSA method starts from a random contraction tree and then applies the above rules to transform the tree. The cost of the contraction tree is evaluated and the tree is updated according to the Metropolis criterion. During the process, the temperature is gradually decreased, and the process stop when the temperature is low enough.
 
+### Tree Decomposition Based Method
+
+Another approach is to use tree decomposition of its corresponding line graph to optimize the contraction order. The tree decomposition method is based on the theorem proved in Ref.[^Markov]: 
+**Theorem 1**. Let $C$ be a quantum circuit with $T$ gates and whose underlying circuit graph is $G_c$. Then $C$ can be simulated deterministically in time $T^{O(1)} e^{O(tw(G_C))}$, where $tw(G_C)$ is the treewidth of $G_C$. 
+Similarly, the contraction order of a tensor network can also be optimized by the treewidth of its corresponding line graph.
+
+#### Line Graph and Tree Decomposition
+
+The relation between the tensor network and it line graph is shown below in the figure, where the indices of the tensor network are the vertices of the line graph, and the vertices are connected in the line graph if they are connected to the same tensors.
+
+![alt text](figs/linegraph.png)
+
+The tree decomposition of a graph is a tree whose nodes are subsets of the vertices of the graph, and the following conditions are satisfied:
+1. Each vertex of the graph is in at least one node of the tree.
+2. For each edge of the graph, there is a node of the tree containing both vertices of the edge.
+3. Bags containing the same vertex have to be connected in the tree.
+
+An example is shown in the following figure, where the tree width is two.
+
+<p align="center">
+  <img src="figs/Tree_decomposition.svg.png" style="width:50%" />
+</p>
+
+Once the tree decomposition is obtained, an elimination order of indices can be obtained by traversing the tree, which is equivalent to the contraction order, an example is shown below.
+
+![alt text](figs/elimination.png)
+
+
+
 <!-- References -->
 
 [^treesa]: Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Multi-Tensor Contraction for XEB Verification of Quantum Circuits.” arXiv, May 18, 2022. https://doi.org/10.48550/arXiv.2108.05665.
@@ -54,5 +83,7 @@ The TreeSA method starts from a random contraction tree and then applies the abo
 [^contengra]: Gray, Johnnie, and Stefanos Kourtis. “Hyper-Optimized Tensor Network Contraction.” Quantum 5 (March 15, 2021): 410. https://doi.org/10.22331/q-2021-03-15-410.
 
 [^kahypar]: Schlag, Sebastian, Tobias Heuer, Lars Gottesbüren, Yaroslav Akhremtsev, Christian Schulz, and Peter Sanders. “High-Quality Hypergraph Partitioning.” ACM Journal of Experimental Algorithmics 27 (December 31, 2022): 1–39. https://doi.org/10.1145/3529090.
+
+[^Markov]: Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81. https://doi.org/10.1137/050644756.
 
 <!-- References -->
