@@ -43,7 +43,9 @@ Maximum clique is a subset of vertices in a graph such that every two distinct v
 
 For a given connected graph $G$, the $a-b$ separator $S$ is a set of vertices such that the removal of $S$ from $G$ disconnects the vertices $a$ and $b$, and for a minimum separator, no proper subset of $S$ is a separator. All minimum separators are intersections of connected potential maximum cliques. For a given graph $G$ and a set of vertices $K$, $\Delta_G(K)$ represents all separators of $G$ in $K$.
 
-After the removal of $S$, the graph $G$ is divided into a few connected components denoted as $\mathcal{C}_G(S)$. For $C \in \mathcal{C}_G(S)$, we call $(S, C)$ a block associated with $S$. If all vertices in $S$ are adjacent vertices in $C$, we call $(S, C)$ a full block, otherwise, we call it a non-full block. $R(S, C) = G_S[S \cup C]$ represents the realization of $G$ the block $(S, C)$, where $G_S$ for adding an edge between every pair of nonadjacent vertices of $S$.
+After the removal of $S$, the graph $G$ is divided into a few connected components denoted as $\mathcal{C}_G(S)$. For $C \in \mathcal{C}_G(S)$, we call $(S, C)$ a block associated with $S$. If all vertices in $S$ are adjacent vertices in $C$, we call $(S, C)$ a full block, otherwise, we call it a non-full block. For $\Omega \in \Pi_k(G)$ and $C_i \in \mathcal{C}_G(\Omega)$, we call $(N(C_i), C_i)$ the blocks associated with $\Omega$.
+
+$R(S, C) = G_S[S \cup C]$ represents the realization of $G$ the block $(S, C)$, where $G_S$ for adding an edge between every pair of nonadjacent vertices of $S$. 
 
 ## The Algorithms
 
@@ -77,14 +79,31 @@ To check the if the cops can win, we can start from labeling all ending points. 
 
 #### The dynamic programming algorithm
 
-
+With the above understanding, we can now introduce the BT dynamic programming algorithm with given $\Delta(G)$ and $\Pi(G)$:
+![alt text](figs/BT.png)
 
 ### The Tamaki2022 Algorithm
 
+In the section above, it is shown that the BT algorithm can search the best tree decomposition in a set of $\Pi(G)$ and $\Delta(G)$. However, exhaustively enumerate all elements in $\Pi(G)$ and $\Delta(G)$ is not efficient, which limits the application of the BT algorithm. 
+
+In the following section, I will introduce a recent algorithm by Tamaki in 2022, which is improved based on the BT algorithm. The Tamaki2022 algorithm search the upper bound and the lower bound of the tree-width of a graph at the same time, which leads to more concise and efficient algorithm.
+
 #### Upper bound algorithm
+
+In the upper bound part, the algorithm search the subset $\Pi(G)$ instead of directly searching a tree decomposition, since the BT algorithm can find the optimal tree decomposition admitted by $\Pi(G)$ in $O(\Pi(G))$ time. The algorithm starts from a greedy search and iteratively update the $\Pi(G)$, by merging sets together, and expect to get lower tree width.
+
+In this algorithm, we start from initial sets $\Pi(G)$ and $\Omega(G)$ via greedy search or other methods, and then we try to merge these sets, with elements in $\Pi(G)$ and $\Omega(G)$ and some new potential cliques.
+
+Assume $X \in \Pi(G)$ and $Y \in \Omega(G)$, and $X \cap Y = \emptyset$, $X \subseteq (Y, C)$, $Y \subseteq (X, D)$. Let $U = N[C] \cap N[D]$ and $H$ the graph as $G[U]$ with edges in $K(N[B])$, where $B$ is the blocks associated with $U$ in $G$, let $\hat{H}$ be a minimum triangulation of $H$. If $tw(\hat{H}) \leq tw_\Pi(G)$, then we can merge $X$, $Y$ and all maximum cliques in $\hat{H}$ to get a new set of potential maximum clique, whose tree width is at most $max(tw_\Pi, tw_\Omega)$.
+
+The algorithm can be summarized as follows:
+![alt text](figs/upper.png)
 
 #### Lower bound algorithm
 
+For the lower bound, the algorithm consider the tree width of a minor of $G$, which has a smaller tree width than $G$. By iteratively updating the upper bound and lower bound, the algorithm can finally get the exact tree width of $G$.
+
+The lower bound is not important for our purpose of find an optimal contraction order.
 
 <!-- Reference -->
 
